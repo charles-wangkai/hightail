@@ -121,6 +121,7 @@ public class HTTPServer {
     // }
 
     int timeLimit = obj.getInt("timeLimit");
+    timeLimit = 5000;
 
     JSONArray testsArr = obj.getJSONArray("tests");
     TestcaseSet testsSet = new TestcaseSet();
