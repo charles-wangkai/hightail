@@ -101,10 +101,21 @@ public class HTTPServer {
   private Problem jsonToProblem(JSONObject obj) throws JSONException {
     String url = obj.getString("url");
 
-    String name = url.substring(url.lastIndexOf('/', url.lastIndexOf('/') - 1) + 1);
+    String workingDirectory = null;
+    String name = null;
+    String pathname = null;
+    if (url.contains("codeforces.com")) {
+      workingDirectory = "/Users/kaiwang/repos/codeforces";
+      name = url.substring(url.lastIndexOf('/', url.lastIndexOf('/') - 1) + 1);
+      pathname = workingDirectory + "/" + name + "/Main.java";
+    } else if (url.contains("atcoder.jp")) {
+      workingDirectory = "/Users/kaiwang/repos/atcoder";
+      name = url.substring(url.lastIndexOf('/') + 1);
+      pathname = workingDirectory + "/" + name + "/Main.java";
+    }
 
     try {
-      File file = new File("/Users/kaiwang/repos/codeforces/" + name + "/Main.java");
+      File file = new File(pathname);
       file.getParentFile().mkdirs();
       file.createNewFile();
     } catch (Exception e) {
@@ -135,6 +146,9 @@ public class HTTPServer {
       testsSet.add(new Testcase(input, output, timeLimit));
     }
 
-    return new Problem(name, testsSet, null);
+    Problem problem = new Problem(name, testsSet, null);
+    problem.setWorkingDirectory(workingDirectory);
+
+    return problem;
   }
 }
